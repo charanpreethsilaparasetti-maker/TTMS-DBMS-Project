@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TTMS Control Room</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark"></span>
+      <div>
+        <h1>TTMS Control Room</h1>
+        <p>Traffic &amp; Transportation Management System (MySQL Enterprise)</p>
+      </div>
+    </div>
+    <div class="conn-status"><span class="dot" id="connDot"></span><span id="connLabel">Connecting to API...</span></div>
+  </header>
+
+  <section class="kpis">
+    <article><span>Active incidents</span><strong id="kpiIncidents">-</strong></article>
+    <article><span>Network avg. speed</span><strong id="kpiSpeed">-</strong></article>
+    <article><span>Sensors active</span><strong id="kpiSensors">-</strong></article>
+    <article><span>Adaptive signals</span><strong id="kpiSignals">-</strong></article>
+  </section>
+
+  <main class="stack">
+    <section class="panel">
+      <div class="panel-head"><div><h2>Network map - Bhopal demo network</h2><p>Road corridors, sensors, incidents, and telemetry come from your MySQL database.</p></div></div>
+      <div id="map"></div>
+      <div class="legend"><span><i class="open"></i>Open</span><span><i class="restricted"></i>Restricted</span><span><i class="closed"></i>Closed</span><span><i class="incident"></i>Incident</span></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head row-between">
+        <div><h2>Corridor Speed &amp; Volume Trends</h2><p>Average speed by road over recent stored telemetry</p></div>
+        <select id="trendRange"><option value="12">12 hours</option><option value="24">24 hours</option><option value="48">48 hours</option></select>
+      </div>
+      <div class="chart-wrap"><canvas id="speedChart"></canvas></div>
+    </section>
+
+    <section class="two-col">
+      <section class="panel">
+        <div class="panel-head"><h2>Operations watchlist</h2><p>Road restrictions, speed shortfalls, and active incidents</p></div>
+        <div id="watchlist" class="list"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Hourly Vehicular Traffic Volume</h2><p>Aggregated traffic from stored readings</p></div>
+        <div class="chart-wrap compact"><canvas id="volumeChart"></canvas></div>
+      </section>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Road corridor details</h2><p>Class, operating status, speed limit, latest speed, and vehicles/hour</p></div>
+      <div class="table-wrap"><table><thead><tr><th>Road corridor</th><th>Class</th><th>Lanes</th><th>Status</th><th>Speed limit</th><th>Latest speed</th><th>Vehicles/hr</th></tr></thead><tbody id="corridorBody"></tbody></table></div>
+    </section>
+
+    <section class="two-col">
+      <section class="panel">
+        <div class="panel-head"><h2>Sensor network status</h2></div>
+        <div id="sensorSummary" class="mini-kpis"></div>
+        <div id="sensorList" class="list scroll"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Traffic enforcement fines</h2><p>Total fine vs collected amount</p></div>
+        <div class="chart-wrap compact"><canvas id="fineChart"></canvas></div>
+      </section>
+    </section>
+
+    <section class="two-col">
+      <section class="panel">
+        <div class="panel-head"><h2>Active incidents</h2></div>
+        <div id="activeIncidents" class="list scroll"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Incident history</h2></div>
+        <div id="incidentHistory" class="list scroll"></div>
+      </section>
+    </section>
+
+    <section class="two-col">
+      <section class="panel">
+        <div class="panel-head"><h2>Signal status &amp; control</h2></div>
+        <div id="signalControls" class="list scroll"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Road status control</h2></div>
+        <div id="roadControls" class="list scroll"></div>
+      </section>
+    </section>
+
+    <section class="two-col">
+      <section class="panel">
+        <div class="panel-head"><h2>Report an incident</h2><p>Click the map for an exact pin; otherwise the selected road midpoint is used.</p></div>
+        <form id="incidentForm" class="form-grid">
+          <label>Type<select name="incident_type"><option>accident</option><option>breakdown</option><option>roadwork</option><option>weather</option><option>event</option><option>obstruction</option></select></label>
+          <label>Segment<select name="segment_id" id="segmentSelect"></select></label>
+          <label>Severity (1-5)<input type="number" name="severity" min="1" max="5" value="3" required></label>
+          <label>Description<input type="text" name="description" placeholder="Incident description and notes"></label>
+          <button type="submit">Submit report</button>
+        </form>
+        <p id="pinNote" class="muted">No custom pin selected.</p>
+        <p id="formNote" class="muted"></p>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Recent activity (Audit Log)</h2></div>
+        <div id="activityLog" class="list scroll tall"></div>
+      </section>
+    </section>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
